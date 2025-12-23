@@ -8,6 +8,17 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
-  return <Welcome />;
+export function loader() {
+  return { title: "Home Page" };
+}
+
+export default function Home({ loaderData, matches, params }: Route.ComponentProps) {
+  console.log(matches, params);
+  
+  return (
+    <div>
+      <h1>{loaderData.title}</h1>
+      <Welcome />
+    </div>
+  );
 }

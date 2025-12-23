@@ -23,6 +23,25 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+// app/root.tsx
+let twdInitialized = false;
+
+export async function clientLoader() {
+  if (import.meta.env.DEV) {
+    const testModules = import.meta.glob("./**/*.twd.test.{ts,tsx}");
+    if (!twdInitialized) {
+      const { initTWD } = await import('twd-js/bundled');
+      initTWD(testModules, {
+        serviceWorker: false,
+      });
+      twdInitialized = true;
+    }
+    return {};
+  } else {
+    return {};
+  }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
