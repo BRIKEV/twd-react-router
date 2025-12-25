@@ -30,6 +30,7 @@ describe("Hello World Test", () => {
 
     // Render the Stub
     root!.render(<Stub />);
+    await twd.wait(300);
     // Check for the element within our test container
     // We scope the search to the container to be safe, or just search globally since the harness is empty otherwise
     const h1 = await screenDom.findByRole('heading', { level: 1 });
@@ -54,6 +55,7 @@ describe("Hello World Test", () => {
 
     // Render the Stub
     root!.render(<Stub />);
+    await twd.wait(300);
     // Check for the element within our test container
     // We scope the search to the container to be safe, or just search globally since the harness is empty otherwise
     const h1 = await screenDom.findByRole('heading', { level: 1 });

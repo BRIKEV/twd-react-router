@@ -9,10 +9,10 @@ export async function setupReactRoot() {
     root = undefined;
   }
 
-  // Navigate to the empty test harness page
+  // Navigate to the empty test page
   await twd.visit('/testing');
   
-  // Get the container from the harness page
+  // Get the container from the test page
   const container = await screenDomGlobal.findByTestId('testing-page');
   root = createRoot(container);
   return root;
