@@ -1,24 +1,63 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "TWD react router example" },
+    { name: "description", content: "Welcome to TWD react router example" },
   ];
 }
 
 export function loader() {
-  return { title: "Home Page" };
+  return { title: "Welcome to TWD" };
 }
 
-export default function Home({ loaderData, matches, params }: Route.ComponentProps) {
-  console.log(matches, params);
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { title } = loaderData;
+  const [count, setCount] = useState(0);
   
   return (
-    <div>
-      <h1>{loaderData.title}</h1>
-      <Welcome />
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-background">
+      <div className="text-center space-y-8 max-w-2xl">
+        <div className="space-y-4">
+          <h1 className="text-6xl font-bold text-foreground" data-testid="welcome-title">
+            {title}
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Test Web Dev - A powerful testing framework for web applications
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <p className="text-lg text-foreground">
+            Get started by reading the{' '}
+            <a
+              href="https://brikev.github.io/twd/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline font-medium"
+            >
+              documentation
+            </a>
+            .
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-4 pt-8">
+          <Button
+            onClick={() => setCount((count) => count + 1)}
+            size="lg"
+            className="min-w-32"
+            data-testid="counter-button"
+          >
+            Count is {count}
+          </Button>
+          <p className="text-sm text-muted-foreground">
+            Click the button to test TWD features
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
