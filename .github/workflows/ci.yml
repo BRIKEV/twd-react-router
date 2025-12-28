@@ -26,7 +26,7 @@ jobs:
       - name: Start Vite dev server
         run: |
           nohup npm run dev > vite.log 2>&1 &
-          npx wait-on http://localhost:5173
+          npx -y wait-on http://localhost:5173/testing --timeout 60000 --interval 1000 || (echo "Server failed to start" && cat vite.log && exit 1)
 
       - name: Cache Puppeteer browsers
         uses: actions/cache@v4
