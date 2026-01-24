@@ -7,8 +7,23 @@ import { createTodo, deleteTodo, fetchTodos, type Todo } from "~/api/todos";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import TodoItem from "~/components/TodoItem";
+import { userContext } from "~/context";
 
-export const loader = async () => {
+// Server-side Authentication Middleware
+const authMiddleware: Route.MiddlewareFunction = async ({ request, context }, next) => {
+  const user = (context as any).get(userContext);
+  context.set(userContext, { id: "1", name: "John Doe", email: "john.doe@example.com" });
+  console.log(user);
+  next();
+}
+
+export const middleware: Route.MiddlewareFunction[] = [
+  authMiddleware,
+];
+
+export const loader = async ({ context }: Route.LoaderArgs) => {
+  const user = context.get(userContext);
+  console.log(user);
   const todos = await fetchTodos();
   return { todos };
 };
