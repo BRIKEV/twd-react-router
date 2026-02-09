@@ -9,6 +9,9 @@ export async function clientLoader() {
       initTWD(testModules, {
         serviceWorker: false,
       });
+      const { createBrowserClient } = await import('twd-relay/browser');
+      const client = createBrowserClient();
+      client.connect();
       twdInitialized = true;
     }
     return {};

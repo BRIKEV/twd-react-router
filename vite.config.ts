@@ -1,9 +1,10 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 // add plugin for code coverage
 import istanbul from 'vite-plugin-istanbul';
+import { twdRemote } from 'twd-relay/vite';
 
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()
@@ -11,6 +12,7 @@ export default defineConfig({
       include: 'app/**/*',
       exclude: ['node_modules', 'tests/', 'twd-tests/', 'public/'],
       extension: ['.ts', '.tsx'],
-    })
+    }),
+    twdRemote() as PluginOption,
   ],
 });
