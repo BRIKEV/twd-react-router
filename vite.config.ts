@@ -17,4 +17,7 @@ export default defineConfig({
     twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}' }),
     twdRemote() as PluginOption,
   ],
+  optimizeDeps: {
+    include: ['twd-js/bundled', 'twd-relay/browser'],
+  },
 });
