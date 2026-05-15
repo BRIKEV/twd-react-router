@@ -4,6 +4,7 @@ import { defineConfig, type PluginOption } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 // add plugin for code coverage
 import istanbul from 'vite-plugin-istanbul';
+import { twd } from 'twd-js/vite-plugin';
 import { twdRemote } from 'twd-relay/vite';
 
 export default defineConfig({
@@ -13,6 +14,7 @@ export default defineConfig({
       exclude: ['node_modules', 'tests/', 'twd-tests/', 'public/'],
       extension: ['.ts', '.tsx'],
     }),
+    twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}' }),
     twdRemote() as PluginOption,
   ],
 });
