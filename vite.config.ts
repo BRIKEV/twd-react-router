@@ -14,10 +14,7 @@ export default defineConfig({
       exclude: ['node_modules', 'tests/', 'twd-tests/', 'public/'],
       extension: ['.ts', '.tsx'],
     }),
-    twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}' }),
+    twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}', serviceWorker: false }),
     twdRemote() as PluginOption,
   ],
-  optimizeDeps: {
-    include: ['twd-js/bundled', 'twd-relay/browser'],
-  },
 });
