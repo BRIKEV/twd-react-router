@@ -70,11 +70,26 @@ import { twdRemote } from 'twd-relay/vite'
 export default defineConfig({
   plugins: [
     // …reactRouter(), tailwindcss(), tsconfigPaths(), istanbul()…
-    twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}' }),
+    twd({ testFilePattern: '/**/*.twd.test.{ts,tsx}', serviceWorker: false }),
     twdRemote() as PluginOption,
   ],
+  server: {
+    warmup: {
+      clientFiles: [
+        './app/twd-tests/**/*.twd.test.{ts,tsx}',
+        './app/root.tsx',
+      ],
+    },
+  },
+  optimizeDeps: {
+    include: ['twd-js/bundled', 'twd-relay/browser'],
+  },
 })
 ```
+
+The `server.warmup` and `optimizeDeps` blocks aren't cosmetic — they're a second SSR-mode workaround. The injected `<script>` tags above point at virtual modules. Vite's dep scanner doesn't walk virtual modules, so it discovers their transitive deps lazily on the first browser request, optimizes them, and triggers an auto-reload to serve the optimized bundle.
+
+Locally it's a quick auto-refresh you barely notice. In headless CI (twd-cli + Puppeteer with a 10s timeout) it's a hard failure: `waitForSelector('#twd-sidebar-root')` times out because the bootstrap restarts mid-load and never finishes inside the window. `server.warmup.clientFiles` makes Vite walk those files' import graphs at startup. `optimizeDeps.include` explicitly pre-bundles the two entries the virtual modules pull in. With both in place, no first-request optimization happens, no reload fires, and the sidebar mounts on first hit locally and in CI.
 
 ---
 
