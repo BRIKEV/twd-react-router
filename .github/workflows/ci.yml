@@ -23,22 +23,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Start Vite dev server
+      # json-server first: the app's axios client and loaders talk to it on port 3001.
+      - name: Start mock API
         run: |
-          nohup npm run dev > vite.log 2>&1 &
-          npx -y wait-on http://localhost:5173/testing --timeout 60000 --interval 1000 || (echo "Server failed to start" && cat vite.log && exit 1)
-          sleep 5
+          nohup npm run serve > json-server.log 2>&1 &
+          npx wait-on http://localhost:3001/todos
 
-      - name: Cache Puppeteer browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/puppeteer
-          key: ${{ runner.os }}-puppeteer-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-puppeteer-
-
-      - name: Install Chrome for Puppeteer
-        run: npx puppeteer browsers install chrome
+      # /testing is the empty mount page the tests render into (twd.config.json url).
+      - name: Start dev server
+        run: |
+          nohup npm run dev:ci > vite.log 2>&1 &
+          npx wait-on http://localhost:5173/testing --timeout 60000 || (echo "Server failed to start" && cat vite.log && exit 1)
+        env:
+          CI: true
 
       - name: Run TWD tests
-        run: npx twd-cli run
+        uses: BRIKEV/twd-cli/.github/actions/run@main
+
+      - name: Display coverage
+        run: npm run collect:coverage:text
